@@ -1,0 +1,26 @@
+[
+  {
+    "itemName": "Rice",
+    "avgDemand": 120,
+    "shelfLifeHours": 6,
+    "popularityScore": 0.82,
+    "costPerUnit": 35,
+    "pricePerUnit": 70
+  },
+  {
+    "itemName": "Dosa",
+    "avgDemand": 85,
+    "shelfLifeHours": 4,
+    "popularityScore": 0.76,
+    "costPerUnit": 30,
+    "pricePerUnit": 65
+  },
+  {
+    "itemName": "Snacks",
+    "avgDemand": 95,
+    "shelfLifeHours": 8,
+    "popularityScore": 0.89,
+    "costPerUnit": 25,
+    "pricePerUnit": 55
+  }
+]

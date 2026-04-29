@@ -1,0 +1,7 @@
+[
+  {"ingredient": "Rice", "availability": "High", "seasonalFactor": 1.0},
+  {"ingredient": "Dosa Batter", "availability": "Medium", "seasonalFactor": 0.95},
+  {"ingredient": "Snacks", "availability": "High", "seasonalFactor": 1.0},
+  {"ingredient": "Vegetables", "availability": "Medium", "seasonalFactor": 0.9},
+  {"ingredient": "Spices", "availability": "High", "seasonalFactor": 1.0}
+]

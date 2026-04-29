@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Canteen Demand Forecasting</title>
+  <link rel="stylesheet" href="/static/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-mark">SC</div>
+        <div>
+          <div class="brand-title">Smart Canteen Demand Forecasting</div>
+          <div class="brand-subtitle">Demand, waste, profit and donation coordination.</div>
+        </div>
+      </div>
+    </div>
+
+    <section class="page-intro">
+      <h1>Next-Day Demand Intelligence</h1>
+      <p>Enter the academic and weather scenario to forecast menu demand, minimize waste, and coordinate food donation.</p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Input Scenario</h2>
+      </div>
+      <form id="forecast-form" class="grid-2">
+        <div>
+          <label for="dayOfWeek">Day of week</label>
+          <select id="dayOfWeek" name="dayOfWeek" required>
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+            <option value="Sunday">Sunday</option>
+          </select>
+        </div>
+        <div>
+          <label for="weather">Weather</label>
+          <select id="weather" name="weather" required>
+            <option value="Sunny">Sunny</option>
+            <option value="Rainy">Rainy</option>
+            <option value="Cloudy">Cloudy</option>
+          </select>
+        </div>
+        <div>
+          <label for="event">Academic event</label>
+          <select id="event" name="event" required>
+            <option value="Normal">Normal</option>
+            <option value="Exam">Exam</option>
+            <option value="Festival">Festival</option>
+          </select>
+        </div>
+        <div>
+          <label for="yesterdaySales">Yesterday’s total sales</label>
+          <input id="yesterdaySales" name="yesterdaySales" type="number" min="0" placeholder="110" required />
+        </div>
+        <div>
+          <label for="city">City</label>
+          <input id="city" name="city" type="text" placeholder="Bengaluru" />
+        </div>
+        <div style="display:flex;align-items:flex-end; gap: 12px;">
+          <button id="get-weather" type="button" class="button-secondary">Get Weather</button>
+          <button type="submit">Run Forecast</button>
+        </div>
+        <div>
+          <label for="supplyAvailability">Supply availability</label>
+          <select id="supplyAvailability" name="supplyAvailability" required>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+        <div>
+          <label for="dataset-file">Dataset CSV (required)</label>
+          <input id="dataset-file" name="dataset-file" type="file" accept=".csv" required />
+        </div>
+      </form>
+    </section>
+
+    <div id="notification" class="notification"></div>
+
+    <section id="result-section" style="display:none;" class="panel">
+      <div class="panel-header">
+        <div>
+          <h2>Forecast Dashboard</h2>
+          <p>Operational guidance for tomorrow’s kitchen production.</p>
+        </div>
+      </div>
+
+      <ul class="cards cards-4">
+        <li class="card">
+          <p class="card-title">Predicted students</p>
+          <p class="card-value" id="predicted-students">--</p>
+          <p class="metric-note">Tomorrow's footfall forecast.</p>
+        </li>
+        <li class="card">
+          <p class="card-title">Waste percentage</p>
+          <p class="card-value" id="waste-percent">--</p>
+          <p class="metric-note">Estimated production loss rate.</p>
+        </li>
+        <li class="card">
+          <p class="card-title">Profit estimate</p>
+          <p class="card-value" id="profit-estimate">--</p>
+          <p class="metric-note">Predicted revenue minus cost.</p>
+        </li>
+        <li class="card">
+          <p class="card-title">Waste units</p>
+          <p class="card-value" id="waste-units">--</p>
+          <p class="metric-note">Surplus servings at risk.</p>
+        </li>
+      </ul>
+
+      <div id="weather-summary" class="weather-summary" style="display:none; margin-bottom: 24px; padding: 18px; border-radius: 18px; background: #eff6ff; border: 1px solid rgba(59, 130, 246, 0.18);"></div>
+      <div class="panel-header" style="margin-top: 24px;">
+        <h2>Demand Summary</h2>
+        <span id="waste-risk" class="status-chip status-low">--</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Demand</th>
+              <th>Popularity</th>
+              <th>Shelf life</th>
+            </tr>
+          </thead>
+          <tbody id="demand-table-body"></tbody>
+        </table>
+      </div>
+
+      <div class="grid-2" style="margin-top: 24px; gap: 24px;">
+        <div class="panel">
+          <h3>Item distribution</h3>
+          <canvas id="item-pie-chart" aria-label="Item distribution chart"></canvas>
+        </div>
+        <div class="panel">
+          <h3>Demand vs production</h3>
+          <canvas id="demand-bar-chart" aria-label="Demand vs production chart"></canvas>
+        </div>
+      </div>
+
+      <div class="panel" id="supply-panel" style="margin-top: 24px;">
+        <div class="panel-header">
+          <h2>Supply readiness</h2>
+        </div>
+        <ul class="supply-list" id="supply-list"></ul>
+      </div>
+
+      <div class="panel" id="menu-panel" style="margin-top: 24px;">
+        <div class="panel-header">
+          <h2>Next Day Menu (Recommended to Sell)</h2>
+          <p>Based on your data and forecast predictions</p>
+        </div>
+        <table class="menu-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Quantity to Prepare</th>
+              <th>Expected Demand</th>
+              <th>Cost per Unit</th>
+              <th>Selling Price</th>
+              <th>Expected Profit</th>
+            </tr>
+          </thead>
+          <tbody id="menu-table-body"></tbody>
+        </table>
+      </div>
+
+      <div class="grid-2" style="margin-top: 24px; gap: 24px;">
+        <div class="panel">
+          <div class="panel-header"><h2>Smart recommendations</h2></div>
+          <ul class="reco-list" id="recommendations-list"></ul>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h2>AI-like insights</h2></div>
+          <ul class="insight-list" id="insights-list"></ul>
+        </div>
+      </div>
+
+      <div id="donation-alert" class="panel alert-card" style="display:none; margin-top: 24px;">
+        <div>
+          <h3>Excess food detected</h3>
+          <p>There is an estimated <strong><span id="donation-amount">0</span> units</strong> of surplus food that can be donated.</p>
+        </div>
+        <button id="notify-ngo" type="button">Notify NGO</button>
+      </div>
+
+      <section class="panel" style="margin-top: 24px;">
+        <div class="panel-header">
+          <h2>AI Assistant</h2>
+        </div>
+        <div id="chat-log" class="chat-log"></div>
+        <form id="chat-form" class="chat-form">
+          <input id="chat-input" type="text" placeholder="Ask about demand forecasting, waste optimization or donation planning..." required />
+          <button type="submit">Send</button>
+        </form>
+      </section>
+    </section>
+
+    <p class="footer-note">Use the demand forecast to reduce food waste and improve canteen planning.</p>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
