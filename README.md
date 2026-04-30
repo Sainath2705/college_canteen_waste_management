@@ -1,191 +1,244 @@
-# College Canteen Waste Analytics and Smart Menu Planner
+# CanteenIQ
 
-Hackathon solution for the Data Science and Analytics theme.
-
-This project turns historical canteen sales data into a decision-support system that can:
-
-- forecast next-day demand from historical patterns, weather, and academic events
-- train on user-provided CSV or JSON datasets, including Kaggle-style tabular data
-- generate per-target predictions for footfall or item demand
-- help plan smarter production quantities to reduce waste
-- provide a foundation for donation coordination when surplus food is expected
+CanteenIQ is a hackathon-ready **data science and analytics** project for solving college canteen waste.
+It predicts next-day demand from historical canteen data, recommends how much food to prepare, estimates waste and profit, and triggers a donation alert when surplus food is likely.
 
 ## Problem Statement
 
-College canteens often waste 30 to 40 percent of food every day because demand changes with exams, festivals, weather, and day of week. The menu is usually fixed, so owners either over-produce or under-produce.
+College canteens often overproduce or underproduce because demand changes with:
 
-The goal is to build a data-driven system that forecasts demand, recommends menu quantities, and reduces waste while protecting profit.
+- day of week
+- weather
+- exams and festivals
+- academic calendar patterns
 
-## Best-Suited Solution
+The result is unnecessary waste, lost profit, and missed donation opportunities.
 
-The most practical hackathon approach is a three-layer analytics pipeline:
+## Solution
+
+CanteenIQ turns your historical sales data into a decision engine with three layers:
 
 1. **Forecasting**
-   - Train a tabular model on historical canteen data.
-   - Predict next-day footfall or item-level demand.
+   - Predict next-day student footfall
+   - Estimate demand for menu items
 
 2. **Optimization**
-   - Convert forecasts into recommended production quantities.
-   - Use simple business rules or a small optimizer to balance waste and profit.
+   - Recommend how much to cook
+   - Balance waste control with profit
 
-3. **Coordination**
-   - If surplus food is predicted, trigger a donation workflow for nearby NGOs.
+3. **Operations**
+   - Raise a donation alert for surplus food
+   - Provide a simple analytics dashboard for judging and demoing
 
-This is a strong fit for the hackathon because it is explainable, fast to train, and works well with structured datasets.
+## Why This Is Strong For A Hackathon
 
-## What The Current Repo Provides
+- Uses **real analytics** instead of a toy demo
+- Works with **your own dataset** or a Kaggle-style tabular dataset
+- Supports **on-demand training**, so it learns from the data you upload
+- Gives both a **dashboard** and an **API**
+- Includes a **donation coordination** angle, which makes the story stronger for judges
 
-- A reusable training pipeline for tabular datasets
-- Automatic handling of CSV and JSON inputs
-- Automatic feature engineering for date-like columns
-- Regression and classification support
-- Model persistence with `joblib`
-- A Flask API for training and inference
-- Sample canteen data for demonstration
+## Main Features
 
-## Recommended Hackathon Demo
-
-For the canteen problem, train separate models for:
-
-- `totalStudents` for next-day footfall
-- `riceSold` for rice demand
-- `dosaSold` for dosa demand
-- `snacksSold` for snacks demand
-
-Then use those predictions to drive menu recommendations and waste reduction logic.
-
-## Project Structure
-
-- `app.py` - Flask API for training, prediction, weather, chat, and status checks
-- `ml_service.py` - dataset loading, preprocessing, training, and inference helpers
-- `train_models.py` - command-line trainer for user-provided datasets
-- `data/canteen_dataset_300_rows.csv` - sample historical canteen data
-- `data/menu_items.json` - sample menu metadata
-- `data/supply_data.json` - sample supply readiness data
-- `data/generate_canteen_dataset.py` - script to regenerate the sample dataset
-- `models/` - saved model artifacts and metadata created after training
+- Upload canteen or tabular CSV/JSON data
+- Train a canteen-specific forecasting model from your own data
+- Generate next-day footfall and item-level demand forecasts
+- Produce a smart menu plan with production quantity, waste estimate, and profit estimate
+- Show donation alerts when surplus food is expected
+- Train a generic model on any Kaggle-style tabular dataset
+- Export forecast results as JSON
 
 ## Tech Stack
 
 - Python
-- Pandas
-- scikit-learn
 - Flask
-- joblib
+- HTML/CSS/JavaScript
+- Chart.js
+- Streamlit
+- Pandas
+- NumPy
+- scikit-learn
+- Plotly
 
-The original problem statement mentions Streamlit. This repo is currently Flask-based, but the analytics layer can be wrapped in Streamlit later if you want a presentation-first demo.
+## Project Layout
 
-## Local Setup
+- [`app.py`](app.py) - Flask API backend and homepage
+- [`static/index.html`](static/index.html) - the main browser UI
+- [`streamlit_app.py`](streamlit_app.py) - optional alternate dashboard
+- [`canteen_analytics.py`](canteen_analytics.py) - canteen-specific forecasting and optimization engine
+- [`ml_service.py`](ml_service.py) - generic tabular model training and prediction utilities
+- [`train_models.py`](train_models.py) - CLI trainer for tabular datasets
+- [`data/canteen_dataset_300_rows.csv`](data/canteen_dataset_300_rows.csv) - sample demo dataset
+- [`data/menu_items.json`](data/menu_items.json) - menu metadata
+- [`data/supply_data.json`](data/supply_data.json) - supply availability metadata
 
-1. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+## How To Run Locally
 
-2. Start the API:
-   ```bash
-   python app.py
-   ```
-
-3. Check the server:
-   ```bash
-   GET /api/health
-   ```
-
-## Training A Model
-
-Train from the bundled sample dataset:
-
-```bash
-python train_models.py data/canteen_dataset_300_rows.csv --target totalStudents --task regression
-```
-
-Train a separate model for item demand:
+### 1) Install dependencies
 
 ```bash
-python train_models.py data/canteen_dataset_300_rows.csv --target riceSold --task regression
-python train_models.py data/canteen_dataset_300_rows.csv --target dosaSold --task regression
-python train_models.py data/canteen_dataset_300_rows.csv --target snacksSold --task regression
+pip install -r requirements.txt
 ```
 
-If your dataset uses a different column name, pass it with `--target`.
-
-You can also save different outputs to different files:
+### 2) Start the browser UI
 
 ```bash
-python train_models.py data/my_canteen_data.csv --target totalStudents --model-path models/footfall_model.joblib
+python app.py
 ```
+
+Then open `http://127.0.0.1:5000/`.
+
+This is the best way to demo the project in a hackathon.
+
+### Optional: train from the CLI
+
+```bash
+python train_models.py data/canteen_dataset_300_rows.csv --canteen
+```
+
+Use the same script without `--canteen` for generic Kaggle-style tabular datasets.
+
+## How The Demo Works
+
+### Canteen mode
+
+1. Choose **Canteen Intelligence**
+2. Use the demo dataset or upload your own historical canteen CSV/JSON
+3. Click **Train selected mode**
+4. Open **Forecast Studio**
+5. Enter tomorrow's weather, event, and supply availability
+6. Get:
+   - next-day student forecast
+   - item demand forecast
+   - suggested production quantities
+   - waste estimate
+   - donation alert
+
+### Custom tabular mode
+
+If you want to use a Kaggle dataset that is not a canteen dataset:
+
+1. Choose **Custom Tabular Trainer**
+2. Upload the dataset
+3. Select the target column
+4. Train the model
+5. Run a prediction on one sample record
+
+## Supported Data
+
+### Canteen training data
+
+The canteen engine works best with columns like:
+
+- `date`
+- `dayOfWeek`
+- `weather`
+- `event`
+- `totalStudents`
+- `riceSold`
+- `dosaSold`
+- `snacksSold`
+
+It also handles item-level canteen schemas such as:
+
+- `idli_sold`
+- `vada_sold`
+- `plain_dosa`
+- `tea_sold`
+- `meals_sold`
+- `samosa_sold`
+- `sandwich_sold`
+- `noodles_sold`
+
+It also accepts common aliases such as:
+
+- `day_of_week`
+- `weather_main`
+- `event_type`
+- `footfall`
+- `attendance`
+- `rice_sold`
+- `dosa_sold`
+- `snacks_sold`
+
+If your dataset includes `*_prep` or `*_waste` columns, the trainer ignores those for demand forecasting and focuses on the actual demand columns.
+
+### Generic tabular data
+
+The custom trainer can handle common Kaggle-style datasets in CSV or JSON format for:
+
+- regression
+- classification
 
 ## API Endpoints
 
-- `GET /` - returns API status and available endpoints
-- `GET /api/health` - health check
-- `GET /model/status` - reports whether a trained model exists
-- `POST /train` - trains a model from an uploaded dataset or `dataPath`
-- `POST /predict` - runs inference using the trained model
-- `GET /weather?city=<city>` - optional live weather lookup
-- `POST /chat` - optional assistant for operational questions
+### Generic training API
 
-## Train Through The API
+- `GET /api/health`
+- `GET /model/status`
+- `POST /train`
+- `POST /predict`
 
-Example multipart upload:
+### Canteen-specific API
 
-```bash
-curl -X POST http://127.0.0.1:5000/train \
-  -F "dataset=@data/canteen_dataset_300_rows.csv" \
-  -F "targetColumn=totalStudents" \
-  -F "taskType=regression"
-```
+- `GET /canteen/status`
+- `POST /canteen/train`
+- `POST /canteen/predict`
 
-Example using a server-side data path:
+### Example: train canteen model
 
 ```bash
-curl -X POST http://127.0.0.1:5000/train \
-  -H "Content-Type: application/json" \
-  -d '{
-    "dataPath": "data/canteen_dataset_300_rows.csv",
-    "targetColumn": "totalStudents",
-    "taskType": "regression"
-  }'
+curl -X POST http://127.0.0.1:5000/canteen/train ^
+  -F "dataset=@data/canteen_dataset_300_rows.csv"
 ```
 
-## Predict With The Trained Model
-
-Send one or more feature rows to `/predict`:
+### Example: predict canteen demand
 
 ```bash
-curl -X POST http://127.0.0.1:5000/predict \
-  -H "Content-Type: application/json" \
-  -d '{
-    "records": [
-      {
-        "dayOfWeek": "Monday",
-        "weather": "Rainy",
-        "event": "Exam"
-      }
-    ]
-  }'
+curl -X POST http://127.0.0.1:5000/canteen/predict ^
+  -H "Content-Type: application/json" ^
+  -d "{
+    \"scenario\": {
+      \"forecastDate\": \"2026-05-01\",
+      \"weather\": \"Rainy\",
+      \"event\": \"Exam\"
+    },
+    \"supplyAvailability\": \"Medium\"
+  }"
 ```
 
-## How To Use This For The Hackathon
+### Example: train a generic Kaggle-style dataset
 
-1. Train a footfall model using historical canteen data.
-2. Train separate demand models for each menu item.
-3. Use tomorrow's day, weather, and event type to generate forecasts.
-4. Convert forecasts into production quantities.
-5. Flag surplus food and show a donation alert.
+```bash
+curl -X POST http://127.0.0.1:5000/train ^
+  -F "dataset=@your_dataset.csv" ^
+  -F "targetColumn=target" ^
+  -F "taskType=auto"
+```
 
-## Why Judges Usually Like This Approach
+## Deployment
 
-- It is practical and easy to explain.
-- It uses real analytics, not just a static demo.
-- It supports any structured Kaggle-style dataset.
-- It produces measurable outputs like MAE, RMSE, and predicted demand.
-- It can be extended with a dashboard or Streamlit app later.
+Use `app.py` as the main entry file. The root route serves the HTML dashboard.
+
+### Render or Heroku-style deploys
+
+The repo includes a [`Procfile`](Procfile) that launches:
+
+```bash
+gunicorn app:app --bind 0.0.0.0:$PORT
+```
+
+### Environment variables
+
+- `OPENWEATHER_API_KEY` - optional, used for live weather lookup in the dashboard
+- `OPENAI_API_KEY` - optional, only relevant if you want the Flask chat fallback to use OpenAI
+
+## Suggested Hackathon Pitch
+
+> CanteenIQ converts historical canteen sales, weather, and academic patterns into a next-day food production plan that reduces waste, protects profit, and routes surplus food to NGOs.
 
 ## Notes
 
-- The training pipeline is for structured tabular data.
-- If you want image, text, or audio datasets, the preprocessing and model choice should change.
-- The sample canteen CSV is included only as demo data. The model is trained only when you provide a dataset.
-
+- The project is designed to train from the dataset you provide.
+- It does not require a pre-trained model to be present.
+- If you upload a new dataset, retrain before forecasting so the model matches your data.

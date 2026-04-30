@@ -14,288 +14,356 @@ const donationAlert = document.getElementById("donation-alert");
 const donationAmount = document.getElementById("donation-amount");
 const notifyButton = document.getElementById("notify-ngo");
 const runButton = document.querySelector("#forecast-form button[type='submit']");
+const weatherButton = document.getElementById("get-weather");
+const cityInput = document.getElementById("city");
+const weatherSelect = document.getElementById("weather");
+const weatherSummary = document.getElementById("weather-summary");
+const datasetInput = document.getElementById("dataset-file");
+const menuTableBody = document.getElementById("menu-table-body");
+const naiveWasteEl = document.getElementById("naive-waste");
+const optimizedWasteEl = document.getElementById("optimized-waste");
+const wasteReductionEl = document.getElementById("waste-reduction");
+const wasteSavedEl = document.getElementById("waste-saved");
 const itemPieChartCtx = document.getElementById("item-pie-chart").getContext("2d");
 const demandBarChartCtx = document.getElementById("demand-bar-chart").getContext("2d");
-const weatherSummary = document.getElementById("weather-summary");
-const cityInput = document.getElementById("city");
-const weatherButton = document.getElementById("get-weather");
-const chatForm = document.getElementById("chat-form");
-const chatInput = document.getElementById("chat-input");
-const chatLog = document.getElementById("chat-log");
 
 let pieChart;
 let barChart;
+let cachedSupplyData = [];
+let cachedWeatherInfo = null;
 
-function createChartDefaults() {
-  if (pieChart) pieChart.destroy();
-  if (barChart) barChart.destroy();
-
-  pieChart = new Chart(itemPieChartCtx, {
-    type: "pie",
-    data: { labels: [], datasets: [{ backgroundColor: ["#3b82f6", "#f59e0b", "#10b981"], data: [] }] },
-    options: { responsive: true, plugins: { legend: { position: "bottom" } } }
-  });
-
-  barChart = new Chart(demandBarChartCtx, {
-    type: "bar",
-    data: { labels: [], datasets: [
-      { label: "Demand", backgroundColor: "#3b82f6", data: [] },
-      { label: "Production", backgroundColor: "#6366f1", data: [] }
-    ] },
-    options: {
-      responsive: true,
-      scales: { y: { beginAtZero: true, ticks: { precision: 0 } } },
-      plugins: { legend: { position: "top" } }
-    }
-  });
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
-function setStatusChip(risk) {
-  const value = risk.toLowerCase();
-  wasteRiskEl.textContent = risk;
-  wasteRiskEl.className = `status-chip status-${value}`;
+function tomorrowIsoDate() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return tomorrow.toISOString().slice(0, 10);
 }
 
-function resetDashboard() {
-  resultSection.style.display = "none";
-  notification.textContent = "";
-  notification.className = "notification";
-  demandTableBody.innerHTML = "";
-  recommendationsList.innerHTML = "";
-  insightsList.innerHTML = "";
-  supplyList.innerHTML = "";
-  donationAlert.style.display = "none";
-  notifyButton.disabled = true;
-  runButton.disabled = false;
-}
-
-function showNotification(message, type = "info") {
+function setNotification(message, type = "info") {
   notification.textContent = message;
   notification.className = type === "error" ? "notification error" : "notification";
 }
 
-function populateDashboard(data) {
-  resultSection.style.display = "block";
-  predictedStudentsEl.textContent = data.predictedStudents;
-  wastePercentEl.textContent = `${data.wasteSummary.wastePercent}%`;
-  profitEstimateEl.textContent = `₹ ${data.profitEstimate.toLocaleString()}`;
-  wasteUnitsEl.textContent = data.wasteSummary.totalWasteUnits;
-  setStatusChip(data.wasteSummary.wasteRisk);
-
-  demandTableBody.innerHTML = data.itemDemands.map(item => `
-      <tr>
-        <td>${item.itemName}</td>
-        <td>${item.predictedDemand}</td>
-        <td>${item.popularityScore}</td>
-        <td>${item.shelfLifeHours} hrs</td>
-      </tr>
-    `).join("");
-
-  recommendationsList.innerHTML = data.recommendations.map(item => `
-      <li>
-        <strong>${item.itemName}</strong> — ${item.recommendation}
-        <div class="legend-key"><span class="legend-color" style="background:#3b82f6"></span> Demand ${item.predictedDemand}</div>
-        <div class="legend-key"><span class="legend-color" style="background:#6366f1"></span> Produce ${item.suggestedProduction}</div>
-      </li>
-    `).join("");
-
-  insightsList.innerHTML = data.insights.map(text => `<li>${text}</li>`).join("");
-  renderSupplyList(data.supplyData);
-  renderWeatherSummary(data.weatherInfo);
-  renderMenuTable(data.itemDemands, data.recommendations);
-
-  if (data.donationAlert) {
-    donationAlert.style.display = "grid";
-    donationAmount.textContent = data.donationAlert.excessQuantity;
-    notifyButton.disabled = false;
-  } else {
-    donationAlert.style.display = "none";
-    notifyButton.disabled = true;
-  }
-
-  updateCharts(data);
+function clearNotification() {
+  notification.textContent = "";
+  notification.className = "notification";
 }
 
-function renderWeatherSummary(weatherInfo) {
+function setStatusChip(risk) {
+  const normalized = (risk || "Low").toLowerCase();
+  wasteRiskEl.textContent = risk || "--";
+  wasteRiskEl.className = `status-chip status-${normalized}`;
+}
+
+function initializeCharts() {
+  pieChart = new Chart(itemPieChartCtx, {
+    type: "pie",
+    data: {
+      labels: ["Rice", "Dosa", "Snacks"],
+      datasets: [{
+        data: [1, 1, 1],
+        backgroundColor: ["#3b82f6", "#0f766e", "#f59e0b"],
+        borderWidth: 0,
+      }],
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: "bottom" } },
+    },
+  });
+
+  barChart = new Chart(demandBarChartCtx, {
+    type: "bar",
+    data: {
+      labels: ["Rice", "Dosa", "Snacks"],
+      datasets: [
+        {
+          label: "Demand",
+          data: [1, 1, 1],
+          backgroundColor: "#3b82f6",
+          borderRadius: 10,
+        },
+        {
+          label: "Production",
+          data: [1, 1, 1],
+          backgroundColor: "#0f766e",
+          borderRadius: 10,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { precision: 0 },
+          grid: { color: "rgba(148, 163, 184, 0.18)" },
+        },
+        x: {
+          grid: { display: false },
+        },
+      },
+      plugins: {
+        legend: { position: "top" },
+      },
+    },
+  });
+}
+
+function renderSupplyList(items) {
+  const fallback = [
+    { ingredient: "Rice", availability: "High", seasonalFactor: 1.0 },
+    { ingredient: "Dosa Batter", availability: "Medium", seasonalFactor: 0.95 },
+    { ingredient: "Snacks", availability: "High", seasonalFactor: 1.0 },
+    { ingredient: "Vegetables", availability: "Medium", seasonalFactor: 0.9 },
+    { ingredient: "Spices", availability: "High", seasonalFactor: 1.0 },
+  ];
+
+  const supplyData = Array.isArray(items) && items.length ? items : fallback;
+  cachedSupplyData = supplyData;
+  supplyList.innerHTML = supplyData.map((item) => `
+    <li class="supply-item">
+      <div>
+        <strong>${escapeHtml(item.ingredient)}</strong>
+        <div class="metric-note">Seasonal factor: ${Number(item.seasonalFactor).toFixed(2)}</div>
+      </div>
+      <span class="supply-status supply-${String(item.availability).toLowerCase()}">${escapeHtml(item.availability)}</span>
+    </li>
+  `).join("");
+}
+
+function updateWeatherSummary(weatherInfo) {
   if (!weatherInfo || !weatherInfo.city) {
-    weatherSummary.style.display = "none";
+    weatherSummary.hidden = true;
+    weatherSummary.innerHTML = "";
     return;
   }
 
-  weatherSummary.style.display = "block";
+  weatherSummary.hidden = false;
   weatherSummary.innerHTML = `
-    <strong>Weather data for ${weatherInfo.city}:</strong>
-    <div>${weatherInfo.description} • ${weatherInfo.temperatureC !== null ? weatherInfo.temperatureC + "°C" : "N/A"} • Humidity ${weatherInfo.humidity !== null ? weatherInfo.humidity + "%" : "N/A"}</div>
-    <div style="margin-top:8px;color:#334155;">Source: ${weatherInfo.source}</div>
+    <strong>Weather for ${escapeHtml(weatherInfo.city)}:</strong>
+    <div style="margin-top:8px;">
+      ${escapeHtml(weatherInfo.description || weatherInfo.weather || "Weather unavailable")}
+      &middot; ${weatherInfo.temperatureC != null ? `${Number(weatherInfo.temperatureC).toFixed(1)} C` : "Temp N/A"}
+      &middot; Humidity ${weatherInfo.humidity != null ? `${escapeHtml(weatherInfo.humidity)}%` : "N/A"}
+    </div>
+    <div style="margin-top:8px;color:#475569;">Source: ${escapeHtml(weatherInfo.source || "client")}</div>
   `;
 }
 
-function renderSupplyList(supplyData) {
-  supplyList.innerHTML = supplyData.map(item => `
-      <li class="supply-item">
-        <div>
-          <strong>${item.ingredient}</strong>
-          <div class="metric-note">Seasonal factor: ${item.seasonalFactor.toFixed(2)}</div>
-        </div>
-        <span class="supply-status supply-${item.availability.toLowerCase()}">${item.availability}</span>
-      </li>
-    `).join("");
-}
+function renderForecast(result) {
+  resultSection.hidden = false;
 
-function renderMenuTable(itemDemands, recommendations) {
-  const menuTableBody = document.getElementById("menu-table-body");
-  
-  menuTableBody.innerHTML = recommendations.map(rec => {
-    const item = itemDemands.find(d => d.itemName === rec.itemName);
-    if (!item) return "";
-    
-    const costPerUnit = item.costPerUnit;
-    const pricePerUnit = item.pricePerUnit;
-    const quantity = rec.suggestedProduction;
-    const expectedDemand = item.predictedDemand;
-    const profit = rec.expectedProfit;
-    
-    return `
-      <tr>
-        <td class="item-name">${rec.itemName}</td>
-        <td class="quantity"><strong>${quantity} units</strong></td>
-        <td class="quantity">${expectedDemand} units</td>
-        <td class="cost-cell">₹ ${costPerUnit}</td>
-        <td class="cost-cell">₹ ${pricePerUnit}</td>
-        <td class="profit-cell">₹ ${profit.toLocaleString()}</td>
-      </tr>
-    `;
-  }).join("");
-}
+  predictedStudentsEl.textContent = Number(result.predictedFootfall || 0).toLocaleString();
+  wastePercentEl.textContent = `${Number(result.wasteSummary?.wastePercent || 0)}%`;
+  profitEstimateEl.textContent = `Rs. ${Number(result.wasteSummary?.profit || 0).toLocaleString()}`;
+  wasteUnitsEl.textContent = Number(result.wasteSummary?.wasteUnits || 0).toLocaleString();
+  setStatusChip(result.wasteSummary?.wasteRisk || "Low");
 
-function updateCharts(data) {
-  const labels = data.itemDemands.map((item) => item.itemName);
-  const demandData = data.itemDemands.map((item) => item.predictedDemand);
-  const productionData = data.recommendations.map((item) => item.suggestedProduction);
+  const menuPlan = Array.isArray(result.menuPlan) ? result.menuPlan : [];
+  const labels = menuPlan.map((item) => item.itemName);
+  const demandValues = menuPlan.map((item) => Number(item.predictedDemand || 0));
+  const productionValues = menuPlan.map((item) => Number(item.suggestedProduction || 0));
 
-  pieChart.data.labels = labels;
-  pieChart.data.datasets[0].data = demandData;
+  demandTableBody.innerHTML = menuPlan.map((item) => `
+    <tr>
+      <td>${escapeHtml(item.itemName)}</td>
+      <td>${Number(item.predictedDemand || 0)}</td>
+      <td>${Number(item.suggestedProduction || 0)}</td>
+      <td>${Number(item.wasteEstimate || 0)}</td>
+    </tr>
+  `).join("");
+
+  recommendationsList.innerHTML = menuPlan.map((item) => `
+    <li>
+      <strong>${escapeHtml(item.itemName)}</strong> - ${escapeHtml(item.recommendation || "Production aligned with demand.")}
+      <div class="metric-note">
+        Demand ${Number(item.predictedDemand || 0)} | Production ${Number(item.suggestedProduction || 0)} | Buffer ${Number(item.bufferPercent || 0).toFixed(1)}%
+      </div>
+    </li>
+  `).join("");
+
+  insightsList.innerHTML = (Array.isArray(result.insights) ? result.insights : []).map((text) => `
+    <li>${escapeHtml(text)}</li>
+  `).join("");
+
+  naiveWasteEl.textContent = `${Number(result.benchmark?.naiveWasteUnits || 0)} units`;
+  optimizedWasteEl.textContent = `${Number(result.benchmark?.optimizedWasteUnits || 0)} units`;
+  wasteReductionEl.textContent = `${Number(result.benchmark?.wasteReductionPercent || 0)}%`;
+  wasteSavedEl.textContent = `${Number(result.benchmark?.wasteReductionUnits || 0)} units`;
+
+  if (result.donationAlert) {
+    donationAlert.hidden = false;
+    donationAmount.textContent = Number(result.donationAlert.excessQuantity || 0).toLocaleString();
+    notifyButton.disabled = false;
+  } else {
+    donationAlert.hidden = true;
+    notifyButton.disabled = true;
+  }
+
+  if (!menuPlan.length) {
+    pieChart.data.labels = ["No data"];
+    pieChart.data.datasets[0].data = [1];
+    barChart.data.labels = ["No data"];
+    barChart.data.datasets[0].data = [0];
+    barChart.data.datasets[1].data = [0];
+  } else {
+    pieChart.data.labels = labels;
+    pieChart.data.datasets[0].data = demandValues;
+    barChart.data.labels = labels;
+    barChart.data.datasets[0].data = demandValues;
+    barChart.data.datasets[1].data = productionValues;
+  }
+
   pieChart.update();
-
-  barChart.data.labels = labels;
-  barChart.data.datasets[0].data = demandData;
-  barChart.data.datasets[1].data = productionData;
   barChart.update();
+
+  updateWeatherSummary(cachedWeatherInfo);
+}
+
+async function fetchJson(url, options = {}) {
+  const response = await fetch(url, options);
+  let data = {};
+  try {
+    data = await response.json();
+  } catch (error) {
+    data = {};
+  }
+  if (!response.ok) {
+    const message = data.error || data.detail || `Request failed with status ${response.status}`;
+    throw new Error(message);
+  }
+  return data;
+}
+
+async function trainDataset(datasetFile) {
+  const formData = new FormData();
+  formData.append("dataset", datasetFile);
+  return fetchJson("/canteen/train", { method: "POST", body: formData });
+}
+
+async function predictScenario(scenario) {
+  return fetchJson("/canteen/predict", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      scenario,
+      supplyAvailability: scenario.supplyAvailability,
+    }),
+  });
+}
+
+async function fetchWeather(city) {
+  const trimmed = city.trim();
+  if (!trimmed) {
+    throw new Error("Enter a city to fetch weather.");
+  }
+
+  return fetchJson(`/weather?city=${encodeURIComponent(trimmed)}`);
+}
+
+function buildScenario() {
+  const tomorrow = tomorrowIsoDate();
+  const formData = new FormData(form);
+  return {
+    dayOfWeek: formData.get("dayOfWeek"),
+    weather: formData.get("weather"),
+    event: formData.get("event"),
+    yesterdaySales: Number(formData.get("yesterdaySales") || 0),
+    city: formData.get("city") || "",
+    supplyAvailability: formData.get("supplyAvailability"),
+    forecastDate: tomorrow,
+    weatherInfo: cachedWeatherInfo,
+  };
 }
 
 async function handleSubmit(event) {
   event.preventDefault();
-  resetDashboard();
+  clearNotification();
 
-  const formData = new FormData(form);
-  const datasetFile = document.getElementById("dataset-file").files[0];
-  const city = cityInput.value.trim();
-  const payload = {
-    dayOfWeek: formData.get("dayOfWeek"),
-    weather: formData.get("weather"),
-    event: formData.get("event"),
-    yesterdaySales: parseInt(formData.get("yesterdaySales"), 10) || 0,
-    supplyAvailability: formData.get("supplyAvailability")
-  };
-
-  showNotification("Forecasting demand based on the selected scenario...");
-
-  try {
-    runButton.disabled = true;
-    notifyButton.disabled = true;
-    const options = datasetFile ? { method: "POST", body: new FormData() } : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) };
-    if (datasetFile) {
-      options.body.append("dataset", datasetFile);
-      Object.keys(payload).forEach((key) => options.body.append(key, payload[key]));
-    }
-
-    const response = await fetch("/predict", options);
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || "Unable to fetch forecast");
-    }
-
-    if (city) {
-      const weatherInfo = await fetchWeather(city);
-      data.weatherInfo = weatherInfo;
-    }
-
-    populateDashboard(data);
-    showNotification("Demand forecast generated successfully.");
-  } catch (error) {
-    showNotification(error.message || "Failed to generate forecast.", "error");
-  } finally {
-    runButton.disabled = false;
-  }
-}
-
-async function fetchWeather(city) {
-  try {
-    const response = await fetch(`/weather?city=${encodeURIComponent(city)}`);
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.error || "Unable to fetch weather data");
-    }
-    return data;
-  } catch (error) {
-    showNotification(error.message || "Weather lookup failed.", "error");
-    return { city, weather: "Unknown", description: "Weather unavailable", temperatureC: null, humidity: null, source: "client" };
-  }
-}
-
-form.addEventListener("submit", handleSubmit);
-weatherButton.addEventListener("click", async () => {
-  const city = cityInput.value.trim();
-  if (!city) {
-    showNotification("Enter a city to fetch weather.", "error");
+  const datasetFile = datasetInput.files[0];
+  if (!datasetFile) {
+    setNotification("Please upload a CSV or JSON dataset first.", "error");
     return;
   }
-  showNotification("Fetching weather data...");
-  const weatherInfo = await fetchWeather(city);
-  renderWeatherSummary(weatherInfo);
-  if (weatherInfo.weather && ["Sunny", "Rainy", "Cloudy"].includes(weatherInfo.weather)) {
-    document.getElementById("weather").value = weatherInfo.weather;
-  }
-  showNotification("Weather data updated.");
-});
 
-chatForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const text = chatInput.value.trim();
-  if (!text) return;
-  appendChatBubble(text, "user");
-  chatInput.value = "";
-  showNotification("Generating assistant response...");
+  runButton.disabled = true;
+  weatherButton.disabled = true;
+  setNotification("Training the canteen model from your dataset...");
 
   try {
-    const response = await fetch("/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text })
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.error || "Chatbot request failed.");
-    }
-    appendChatBubble(data.reply, "assistant");
-    showNotification("Assistant replied successfully.");
+    await trainDataset(datasetFile);
+    setNotification("Dataset trained. Generating the next-day forecast...");
+
+    const scenario = buildScenario();
+    const result = await predictScenario(scenario);
+    renderForecast(result);
+    setNotification("Forecast generated successfully.");
   } catch (error) {
-    appendChatBubble("I'm having trouble responding right now.", "assistant");
-    showNotification(error.message || "Chatbot failed.", "error");
+    resultSection.hidden = false;
+    setNotification(error.message || "Failed to generate the forecast.", "error");
+  } finally {
+    runButton.disabled = false;
+    weatherButton.disabled = false;
   }
-});
-
-function appendChatBubble(message, role) {
-  const bubble = document.createElement("div");
-  bubble.className = `chat-bubble ${role}`;
-  bubble.textContent = message;
-  chatLog.appendChild(bubble);
-  chatLog.scrollTop = chatLog.scrollHeight;
 }
 
-function donateConfirmation() {
-  alert("NGO notified successfully. Donation coordination message has been sent.");
+async function handleWeatherLookup() {
+  const city = cityInput.value || "";
+  if (!city.trim()) {
+    setNotification("Enter a city to fetch weather.", "error");
+    return;
+  }
+
+  weatherButton.disabled = true;
+  setNotification("Fetching live weather...");
+
+  try {
+    const weatherInfo = await fetchWeather(city);
+    cachedWeatherInfo = weatherInfo;
+    updateWeatherSummary(weatherInfo);
+    if (weatherInfo.weather && ["Sunny", "Cloudy", "Rainy"].includes(weatherInfo.weather)) {
+      weatherSelect.value = weatherInfo.weather;
+    }
+    setNotification(`Weather loaded for ${weatherInfo.city || city}.`);
+  } catch (error) {
+    setNotification(error.message || "Weather lookup failed.", "error");
+  } finally {
+    weatherButton.disabled = false;
+  }
 }
 
-createChartDefaults();
+async function loadSupplyPanel() {
+  try {
+    const data = await fetchJson("/api/supply");
+    renderSupplyList(data);
+  } catch (error) {
+    renderSupplyList([]);
+  }
+}
+
+function bindEvents() {
+  form.addEventListener("submit", handleSubmit);
+  weatherButton.addEventListener("click", handleWeatherLookup);
+  notifyButton.addEventListener("click", () => {
+    alert("NGO notified successfully. Donation coordination message has been sent.");
+  });
+}
+
+async function initialize() {
+  initializeCharts();
+  bindEvents();
+  await loadSupplyPanel();
+  updateWeatherSummary(null);
+}
+
+initialize();

@@ -1,0 +1,1277 @@
+{
+  "trainedAt": "2026-04-30T01:37:48.569914+00:00",
+  "datasetFingerprint": "615b89a6b5bb3bab9b5de5f8acf6c6cbdf543906a808a644730bfaf563855f69",
+  "modelPath": "D:\\canteen_waste\\models\\canteen_intelligence.joblib",
+  "metadataPath": "D:\\canteen_waste\\models\\canteen_intelligence.json",
+  "targetColumns": [
+    "expected_footfall",
+    "actual_footfall",
+    "veg_biryani_sold",
+    "vada_sold",
+    "tea_sold",
+    "sandwich_sold",
+    "samosa_sold",
+    "plain_dosa_sold",
+    "noodles_sold",
+    "meals_sold",
+    "masala_dosa_sold",
+    "idli_sold",
+    "coffee_sold",
+    "chapati_sold"
+  ],
+  "featureColumns": [
+    "dayOfWeek",
+    "weather",
+    "temperature",
+    "event",
+    "campus_activity",
+    "supply_level",
+    "inventory_status",
+    "time_slot",
+    "total_revenue",
+    "total_cost",
+    "profit",
+    "idli_prepared",
+    "idli_waste",
+    "vada_prepared",
+    "vada_waste",
+    "plain_dosa_prepared",
+    "plain_dosa_waste",
+    "masala_dosa_prepared",
+    "masala_dosa_waste",
+    "chapati_prepared",
+    "chapati_waste",
+    "veg_biryani_prepared",
+    "veg_biryani_waste",
+    "meals_prepared",
+    "meals_waste",
+    "samosa_prepared",
+    "samosa_waste",
+    "tea_prepared",
+    "tea_waste",
+    "coffee_prepared",
+    "coffee_waste",
+    "sandwich_prepared",
+    "sandwich_waste",
+    "noodles_prepared",
+    "noodles_waste",
+    "month",
+    "quarter",
+    "dayOfMonth",
+    "dayOfYear",
+    "dayOfWeekNumber",
+    "isWeekend",
+    "weekOfYear",
+    "daysSinceStart",
+    "lag__expected_footfall__1",
+    "lag__expected_footfall__3",
+    "lag__expected_footfall__7",
+    "roll__expected_footfall__3",
+    "roll__expected_footfall__7",
+    "lag__actual_footfall__1",
+    "lag__actual_footfall__3",
+    "lag__actual_footfall__7",
+    "roll__actual_footfall__3",
+    "roll__actual_footfall__7",
+    "lag__veg_biryani_sold__1",
+    "lag__veg_biryani_sold__3",
+    "lag__veg_biryani_sold__7",
+    "roll__veg_biryani_sold__3",
+    "roll__veg_biryani_sold__7",
+    "lag__vada_sold__1",
+    "lag__vada_sold__3",
+    "lag__vada_sold__7",
+    "roll__vada_sold__3",
+    "roll__vada_sold__7",
+    "lag__tea_sold__1",
+    "lag__tea_sold__3",
+    "lag__tea_sold__7",
+    "roll__tea_sold__3",
+    "roll__tea_sold__7",
+    "lag__sandwich_sold__1",
+    "lag__sandwich_sold__3",
+    "lag__sandwich_sold__7",
+    "roll__sandwich_sold__3",
+    "roll__sandwich_sold__7",
+    "lag__samosa_sold__1",
+    "lag__samosa_sold__3",
+    "lag__samosa_sold__7",
+    "roll__samosa_sold__3",
+    "roll__samosa_sold__7",
+    "lag__plain_dosa_sold__1",
+    "lag__plain_dosa_sold__3",
+    "lag__plain_dosa_sold__7",
+    "roll__plain_dosa_sold__3",
+    "roll__plain_dosa_sold__7",
+    "lag__noodles_sold__1",
+    "lag__noodles_sold__3",
+    "lag__noodles_sold__7",
+    "roll__noodles_sold__3",
+    "roll__noodles_sold__7",
+    "lag__meals_sold__1",
+    "lag__meals_sold__3",
+    "lag__meals_sold__7",
+    "roll__meals_sold__3",
+    "roll__meals_sold__7",
+    "lag__masala_dosa_sold__1",
+    "lag__masala_dosa_sold__3",
+    "lag__masala_dosa_sold__7",
+    "roll__masala_dosa_sold__3",
+    "roll__masala_dosa_sold__7",
+    "lag__idli_sold__1",
+    "lag__idli_sold__3",
+    "lag__idli_sold__7",
+    "roll__idli_sold__3",
+    "roll__idli_sold__7",
+    "lag__coffee_sold__1",
+    "lag__coffee_sold__3",
+    "lag__coffee_sold__7",
+    "roll__coffee_sold__3",
+    "roll__coffee_sold__7",
+    "lag__chapati_sold__1",
+    "lag__chapati_sold__3",
+    "lag__chapati_sold__7",
+    "roll__chapati_sold__3",
+    "roll__chapati_sold__7"
+  ],
+  "lagWindows": [
+    1,
+    3,
+    7
+  ],
+  "rollingWindows": [
+    3,
+    7
+  ],
+  "metrics": {
+    "expected_footfall": {
+      "mae": 11.287310814069022,
+      "rmse": 14.299402785129553,
+      "r2": 0.9492090251588923,
+      "validationRows": 198,
+      "topFeatures": [
+        {
+          "feature": "numeric__total_revenue",
+          "importance": 0.11204930271341773
+        },
+        {
+          "feature": "numeric__total_cost",
+          "importance": 0.10968718376692634
+        },
+        {
+          "feature": "numeric__coffee_prepared",
+          "importance": 0.07661572912379469
+        },
+        {
+          "feature": "numeric__idli_prepared",
+          "importance": 0.06617831000644266
+        },
+        {
+          "feature": "categorical__event_Festival",
+          "importance": 0.06615726605094083
+        },
+        {
+          "feature": "numeric__profit",
+          "importance": 0.06030095935543808
+        },
+        {
+          "feature": "numeric__tea_prepared",
+          "importance": 0.05966870324429206
+        },
+        {
+          "feature": "numeric__plain_dosa_prepared",
+          "importance": 0.05933161313174202
+        },
+        {
+          "feature": "numeric__chapati_prepared",
+          "importance": 0.0409649509236729
+        },
+        {
+          "feature": "numeric__vada_prepared",
+          "importance": 0.037909797764857485
+        }
+      ]
+    },
+    "actual_footfall": {
+      "mae": 12.179899234346834,
+      "rmse": 14.7757339118796,
+      "r2": 0.9498540146002272,
+      "validationRows": 198,
+      "topFeatures": [
+        {
+          "feature": "numeric__total_revenue",
+          "importance": 0.11204930271341773
+        },
+        {
+          "feature": "numeric__total_cost",
+          "importance": 0.10968718376692634
+        },
+        {
+          "feature": "numeric__coffee_prepared",
+          "importance": 0.07661572912379469
+        },
+        {
+          "feature": "numeric__idli_prepared",
+          "importance": 0.06617831000644266
+        },
+        {
+          "feature": "categorical__event_Festival",
+          "importance": 0.06615726605094083
+        },
+        {
+          "feature": "numeric__profit",
+          "importance": 0.06030095935543808
+        },
+        {
+          "feature": "numeric__tea_prepared",
+          "importance": 0.05966870324429206
+        },
+        {
+          "feature": "numeric__plain_dosa_prepared",
+          "importance": 0.05933161313174202
+        },
+        {
+          "feature": "numeric__chapati_prepared",
+          "importance": 0.0409649509236729
+        },
+        {
+          "feature": "numeric__vada_prepared",
+          "importance": 0.037909797764857485
+        }
+      ]
+    },
+    "veg_biryani_sold": {
+      "mae": 1.9476695177484324,
+      "rmse": 2.49724021420058,
+      "r2": 0.8930367371787296,
+      "validationRows": 198,
+      "topFeatures": [
+        {
+          "feature": "numeric__total_revenue",
+          "importance": 0.11204930271341773
+        },
+        {
+          "feature": "numeric__total_cost",
+          "importance": 0.10968718376692634
+        },
+        {
+          "feature": "numeric__coffee_prepared",
+          "importance": 0.07661572912379469
+        },
+        {
+          "feature": "numeric__idli_prepared",
+          "importance": 0.06617831000644266
+        },
+        {
+          "feature": "categorical__event_Festival",
+          "importance": 0.06615726605094083
+        },
+        {
+          "feature": "numeric__profit",
+          "importance": 0.06030095935543808
+        },
+        {
+          "feature": "numeric__tea_prepared",
+          "importance": 0.05966870324429206
+        },
+        {
+          "feature": "numeric__plain_dosa_prepared",
+          "importance": 0.05933161313174202
+        },
+        {
+          "feature": "numeric__chapati_prepared",
+          "importance": 0.0409649509236729
+        },
+        {
+          "feature": "numeric__vada_prepared",
+          "importance": 0.037909797764857485
+        }
+      ]
+    },
+    "vada_sold": {
+      "mae": 2.3772144135559543,
+      "rmse": 2.993027943069588,
+      "r2": 0.8626970377372359,
+      "validationRows": 198,
+      "topFeatures": [
+        {
+          "feature": "numeric__total_revenue",
+          "importance": 0.11204930271341773
+        },
+        {
+          "feature": "numeric__total_cost",
+          "importance": 0.10968718376692634
+        },
+        {
+          "feature": "numeric__coffee_prepared",
+          "importance": 0.07661572912379469
+        },
+        {
+          "feature": "numeric__idli_prepared",
+          "importance": 0.06617831000644266
+        },
+        {
+          "feature": "categorical__event_Festival",
+          "importance": 0.06615726605094083
+        },
+        {
+          "feature": "numeric__profit",
+          "importance": 0.06030095935543808
+        },
+        {
+          "feature": "numeric__tea_prepared",
+          "importance": 0.05966870324429206
+        },
+        {
+          "feature": "numeric__plain_dosa_prepared",
+          "importance": 0.05933161313174202
+        },
+        {
+          "feature": "numeric__chapati_prepared",
+          "importance": 0.0409649509236729
+        },
+        {
+          "feature": "numeric__vada_prepared",
+          "importance": 0.037909797764857485
+        }
+      ]
+    },
+    "tea_sold": {
+      "mae": 2.6902687878666405,
+      "rmse": 3.4687042924719447,
+      "r2": 0.9322374881059776,
+      "validationRows": 198,
+      "topFeatures": [
+        {
+          "feature": "numeric__total_revenue",
+          "importance": 0.11204930271341773
+        },
+        {
+          "feature": "numeric__total_cost",
+          "importance": 0.10968718376692634
+        },
+        {
+          "feature": "numeric__coffee_prepared",
+          "importance": 0.07661572912379469
+        },
+        {
+          "feature": "numeric__idli_prepared",
+          "importance": 0.06617831000644266
+        },
+        {
+          "feature": "categorical__event_Festival",
+          "importance": 0.06615726605094083
+        },
+        {
+          "feature": "numeric__profit",
+          "importance": 0.06030095935543808
+        },
+        {
+          "feature": "numeric__tea_prepared",
+          "importance": 0.05966870324429206
+        },
+        {
+          "feature": "numeric__plain_dosa_prepared",
+          "importance": 0.05933161313174202
+        },
+        {
+          "feature": "numeric__chapati_prepared",
+          "importance": 0.0409649509236729
+        },
+        {
+          "feature": "numeric__vada_prepared",
+          "importance": 0.037909797764857485
+        }
+      ]
+    },
+    "sandwich_sold": {
+      "mae": 2.3188864368188864,
+      "rmse": 2.8846499877689276,
+      "r2": 0.7114305911352783,
+      "validationRows": 198,
+      "topFeatures": [
+        {
+          "feature": "numeric__total_revenue",
+          "importance": 0.11204930271341773
+        },
+        {
+          "feature": "numeric__total_cost",
+          "importance": 0.10968718376692634
+        },
+        {
+          "feature": "numeric__coffee_prepared",
+          "importance": 0.07661572912379469
+        },
+        {
+          "feature": "numeric__idli_prepared",
+          "importance": 0.06617831000644266
+        },
+        {
+          "feature": "categorical__event_Festival",
+          "importance": 0.06615726605094083
+        },
+        {
+          "feature": "numeric__profit",
+          "importance": 0.06030095935543808
+        },
+        {
+          "feature": "numeric__tea_prepared",
+          "importance": 0.05966870324429206
+        },
+        {
+          "feature": "numeric__plain_dosa_prepared",
+          "importance": 0.05933161313174202
+        },
+        {
+          "feature": "numeric__chapati_prepared",
+          "importance": 0.0409649509236729
+        },
+        {
+          "feature": "numeric__vada_prepared",
+          "importance": 0.037909797764857485
+        }
+      ]
+    },
+    "samosa_sold": {
+      "mae": 2.2289277029554806,
+      "rmse": 2.772850469141332,
+      "r2": 0.7670451121170083,
+      "validationRows": 198,
+      "topFeatures": [
+        {
+          "feature": "numeric__total_revenue",
+          "importance": 0.11204930271341773
+        },
+        {
+          "feature": "numeric__total_cost",
+          "importance": 0.10968718376692634
+        },
+        {
+          "feature": "numeric__coffee_prepared",
+          "importance": 0.07661572912379469
+        },
+        {
+          "feature": "numeric__idli_prepared",
+          "importance": 0.06617831000644266
+        },
+        {
+          "feature": "categorical__event_Festival",
+          "importance": 0.06615726605094083
+        },
+        {
+          "feature": "numeric__profit",
+          "importance": 0.06030095935543808
+        },
+        {
+          "feature": "numeric__tea_prepared",
+          "importance": 0.05966870324429206
+        },
+        {
+          "feature": "numeric__plain_dosa_prepared",
+          "importance": 0.05933161313174202
+        },
+        {
+          "feature": "numeric__chapati_prepared",
+          "importance": 0.0409649509236729
+        },
+        {
+          "feature": "numeric__vada_prepared",
+          "importance": 0.037909797764857485
+        }
+      ]
+    },
+    "plain_dosa_sold": {
+      "mae": 2.3489021983908347,
+      "rmse": 2.925554637569509,
+      "r2": 0.9322995313764046,
+      "validationRows": 198,
+      "topFeatures": [
+        {
+          "feature": "numeric__total_revenue",
+          "importance": 0.11204930271341773
+        },
+        {
+          "feature": "numeric__total_cost",
+          "importance": 0.10968718376692634
+        },
+        {
+          "feature": "numeric__coffee_prepared",
+          "importance": 0.07661572912379469
+        },
+        {
+          "feature": "numeric__idli_prepared",
+          "importance": 0.06617831000644266
+        },
+        {
+          "feature": "categorical__event_Festival",
+          "importance": 0.06615726605094083
+        },
+        {
+          "feature": "numeric__profit",
+          "importance": 0.06030095935543808
+        },
+        {
+          "feature": "numeric__tea_prepared",
+          "importance": 0.05966870324429206
+        },
+        {
+          "feature": "numeric__plain_dosa_prepared",
+          "importance": 0.05933161313174202
+        },
+        {
+          "feature": "numeric__chapati_prepared",
+          "importance": 0.0409649509236729
+        },
+        {
+          "feature": "numeric__vada_prepared",
+          "importance": 0.037909797764857485
+        }
+      ]
+    },
+    "noodles_sold": {
+      "mae": 2.2006681184743058,
+      "rmse": 2.7829587970189813,
+      "r2": 0.8121025647476795,
+      "validationRows": 198,
+      "topFeatures": [
+        {
+          "feature": "numeric__total_revenue",
+          "importance": 0.11204930271341773
+        },
+        {
+          "feature": "numeric__total_cost",
+          "importance": 0.10968718376692634
+        },
+        {
+          "feature": "numeric__coffee_prepared",
+          "importance": 0.07661572912379469
+        },
+        {
+          "feature": "numeric__idli_prepared",
+          "importance": 0.06617831000644266
+        },
+        {
+          "feature": "categorical__event_Festival",
+          "importance": 0.06615726605094083
+        },
+        {
+          "feature": "numeric__profit",
+          "importance": 0.06030095935543808
+        },
+        {
+          "feature": "numeric__tea_prepared",
+          "importance": 0.05966870324429206
+        },
+        {
+          "feature": "numeric__plain_dosa_prepared",
+          "importance": 0.05933161313174202
+        },
+        {
+          "feature": "numeric__chapati_prepared",
+          "importance": 0.0409649509236729
+        },
+        {
+          "feature": "numeric__vada_prepared",
+          "importance": 0.037909797764857485
+        }
+      ]
+    },
+    "meals_sold": {
+      "mae": 2.1794505495673424,
+      "rmse": 2.8459233580172327,
+      "r2": 0.9234153702459408,
+      "validationRows": 198,
+      "topFeatures": [
+        {
+          "feature": "numeric__total_revenue",
+          "importance": 0.11204930271341773
+        },
+        {
+          "feature": "numeric__total_cost",
+          "importance": 0.10968718376692634
+        },
+        {
+          "feature": "numeric__coffee_prepared",
+          "importance": 0.07661572912379469
+        },
+        {
+          "feature": "numeric__idli_prepared",
+          "importance": 0.06617831000644266
+        },
+        {
+          "feature": "categorical__event_Festival",
+          "importance": 0.06615726605094083
+        },
+        {
+          "feature": "numeric__profit",
+          "importance": 0.06030095935543808
+        },
+        {
+          "feature": "numeric__tea_prepared",
+          "importance": 0.05966870324429206
+        },
+        {
+          "feature": "numeric__plain_dosa_prepared",
+          "importance": 0.05933161313174202
+        },
+        {
+          "feature": "numeric__chapati_prepared",
+          "importance": 0.0409649509236729
+        },
+        {
+          "feature": "numeric__vada_prepared",
+          "importance": 0.037909797764857485
+        }
+      ]
+    },
+    "masala_dosa_sold": {
+      "mae": 2.4425818687718936,
+      "rmse": 3.2013667058822812,
+      "r2": 0.8145443240619117,
+      "validationRows": 198,
+      "topFeatures": [
+        {
+          "feature": "numeric__total_revenue",
+          "importance": 0.11204930271341773
+        },
+        {
+          "feature": "numeric__total_cost",
+          "importance": 0.10968718376692634
+        },
+        {
+          "feature": "numeric__coffee_prepared",
+          "importance": 0.07661572912379469
+        },
+        {
+          "feature": "numeric__idli_prepared",
+          "importance": 0.06617831000644266
+        },
+        {
+          "feature": "categorical__event_Festival",
+          "importance": 0.06615726605094083
+        },
+        {
+          "feature": "numeric__profit",
+          "importance": 0.06030095935543808
+        },
+        {
+          "feature": "numeric__tea_prepared",
+          "importance": 0.05966870324429206
+        },
+        {
+          "feature": "numeric__plain_dosa_prepared",
+          "importance": 0.05933161313174202
+        },
+        {
+          "feature": "numeric__chapati_prepared",
+          "importance": 0.0409649509236729
+        },
+        {
+          "feature": "numeric__vada_prepared",
+          "importance": 0.037909797764857485
+        }
+      ]
+    },
+    "idli_sold": {
+      "mae": 2.7482002808265436,
+      "rmse": 3.553024201397917,
+      "r2": 0.9149909470170601,
+      "validationRows": 198,
+      "topFeatures": [
+        {
+          "feature": "numeric__total_revenue",
+          "importance": 0.11204930271341773
+        },
+        {
+          "feature": "numeric__total_cost",
+          "importance": 0.10968718376692634
+        },
+        {
+          "feature": "numeric__coffee_prepared",
+          "importance": 0.07661572912379469
+        },
+        {
+          "feature": "numeric__idli_prepared",
+          "importance": 0.06617831000644266
+        },
+        {
+          "feature": "categorical__event_Festival",
+          "importance": 0.06615726605094083
+        },
+        {
+          "feature": "numeric__profit",
+          "importance": 0.06030095935543808
+        },
+        {
+          "feature": "numeric__tea_prepared",
+          "importance": 0.05966870324429206
+        },
+        {
+          "feature": "numeric__plain_dosa_prepared",
+          "importance": 0.05933161313174202
+        },
+        {
+          "feature": "numeric__chapati_prepared",
+          "importance": 0.0409649509236729
+        },
+        {
+          "feature": "numeric__vada_prepared",
+          "importance": 0.037909797764857485
+        }
+      ]
+    },
+    "coffee_sold": {
+      "mae": 2.753676853916753,
+      "rmse": 3.550313969665638,
+      "r2": 0.9158456300495963,
+      "validationRows": 198,
+      "topFeatures": [
+        {
+          "feature": "numeric__total_revenue",
+          "importance": 0.11204930271341773
+        },
+        {
+          "feature": "numeric__total_cost",
+          "importance": 0.10968718376692634
+        },
+        {
+          "feature": "numeric__coffee_prepared",
+          "importance": 0.07661572912379469
+        },
+        {
+          "feature": "numeric__idli_prepared",
+          "importance": 0.06617831000644266
+        },
+        {
+          "feature": "categorical__event_Festival",
+          "importance": 0.06615726605094083
+        },
+        {
+          "feature": "numeric__profit",
+          "importance": 0.06030095935543808
+        },
+        {
+          "feature": "numeric__tea_prepared",
+          "importance": 0.05966870324429206
+        },
+        {
+          "feature": "numeric__plain_dosa_prepared",
+          "importance": 0.05933161313174202
+        },
+        {
+          "feature": "numeric__chapati_prepared",
+          "importance": 0.0409649509236729
+        },
+        {
+          "feature": "numeric__vada_prepared",
+          "importance": 0.037909797764857485
+        }
+      ]
+    },
+    "chapati_sold": {
+      "mae": 2.1998363459632406,
+      "rmse": 2.7703034818375025,
+      "r2": 0.9236928297898873,
+      "validationRows": 198,
+      "topFeatures": [
+        {
+          "feature": "numeric__total_revenue",
+          "importance": 0.11204930271341773
+        },
+        {
+          "feature": "numeric__total_cost",
+          "importance": 0.10968718376692634
+        },
+        {
+          "feature": "numeric__coffee_prepared",
+          "importance": 0.07661572912379469
+        },
+        {
+          "feature": "numeric__idli_prepared",
+          "importance": 0.06617831000644266
+        },
+        {
+          "feature": "categorical__event_Festival",
+          "importance": 0.06615726605094083
+        },
+        {
+          "feature": "numeric__profit",
+          "importance": 0.06030095935543808
+        },
+        {
+          "feature": "numeric__tea_prepared",
+          "importance": 0.05966870324429206
+        },
+        {
+          "feature": "numeric__plain_dosa_prepared",
+          "importance": 0.05933161313174202
+        },
+        {
+          "feature": "numeric__chapati_prepared",
+          "importance": 0.0409649509236729
+        },
+        {
+          "feature": "numeric__vada_prepared",
+          "importance": 0.037909797764857485
+        }
+      ]
+    }
+  },
+  "datasetProfile": {
+    "rows": 1000,
+    "columns": [
+      "date",
+      "day_of_week",
+      "weather",
+      "temperature",
+      "event",
+      "campus_activity",
+      "expected_footfall",
+      "actual_footfall",
+      "supply_level",
+      "inventory_status",
+      "time_slot",
+      "total_revenue",
+      "total_cost",
+      "profit",
+      "idli_sold",
+      "idli_prepared",
+      "idli_waste",
+      "vada_sold",
+      "vada_prepared",
+      "vada_waste",
+      "plain_dosa_sold",
+      "plain_dosa_prepared",
+      "plain_dosa_waste",
+      "masala_dosa_sold",
+      "masala_dosa_prepared",
+      "masala_dosa_waste",
+      "chapati_sold",
+      "chapati_prepared",
+      "chapati_waste",
+      "veg_biryani_sold",
+      "veg_biryani_prepared",
+      "veg_biryani_waste",
+      "meals_sold",
+      "meals_prepared",
+      "meals_waste",
+      "samosa_sold",
+      "samosa_prepared",
+      "samosa_waste",
+      "tea_sold",
+      "tea_prepared",
+      "tea_waste",
+      "coffee_sold",
+      "coffee_prepared",
+      "coffee_waste",
+      "sandwich_sold",
+      "sandwich_prepared",
+      "sandwich_waste",
+      "noodles_sold",
+      "noodles_prepared",
+      "noodles_waste"
+    ],
+    "missingValues": {
+      "date": 0,
+      "day_of_week": 0,
+      "weather": 0,
+      "temperature": 0,
+      "event": 0,
+      "campus_activity": 0,
+      "expected_footfall": 0,
+      "actual_footfall": 0,
+      "supply_level": 0,
+      "inventory_status": 0,
+      "time_slot": 0,
+      "total_revenue": 0,
+      "total_cost": 0,
+      "profit": 0,
+      "idli_sold": 0,
+      "idli_prepared": 0,
+      "idli_waste": 0,
+      "vada_sold": 0,
+      "vada_prepared": 0,
+      "vada_waste": 0,
+      "plain_dosa_sold": 0,
+      "plain_dosa_prepared": 0,
+      "plain_dosa_waste": 0,
+      "masala_dosa_sold": 0,
+      "masala_dosa_prepared": 0,
+      "masala_dosa_waste": 0,
+      "chapati_sold": 0,
+      "chapati_prepared": 0,
+      "chapati_waste": 0,
+      "veg_biryani_sold": 0,
+      "veg_biryani_prepared": 0,
+      "veg_biryani_waste": 0,
+      "meals_sold": 0,
+      "meals_prepared": 0,
+      "meals_waste": 0,
+      "samosa_sold": 0,
+      "samosa_prepared": 0,
+      "samosa_waste": 0,
+      "tea_sold": 0,
+      "tea_prepared": 0,
+      "tea_waste": 0,
+      "coffee_sold": 0,
+      "coffee_prepared": 0,
+      "coffee_waste": 0,
+      "sandwich_sold": 0,
+      "sandwich_prepared": 0,
+      "sandwich_waste": 0,
+      "noodles_sold": 0,
+      "noodles_prepared": 0,
+      "noodles_waste": 0
+    },
+    "dtypes": {
+      "date": "object",
+      "day_of_week": "object",
+      "weather": "object",
+      "temperature": "float64",
+      "event": "object",
+      "campus_activity": "object",
+      "expected_footfall": "float64",
+      "actual_footfall": "float64",
+      "supply_level": "object",
+      "inventory_status": "object",
+      "time_slot": "object",
+      "total_revenue": "float64",
+      "total_cost": "float64",
+      "profit": "float64",
+      "idli_sold": "float64",
+      "idli_prepared": "float64",
+      "idli_waste": "float64",
+      "vada_sold": "float64",
+      "vada_prepared": "float64",
+      "vada_waste": "float64",
+      "plain_dosa_sold": "float64",
+      "plain_dosa_prepared": "float64",
+      "plain_dosa_waste": "float64",
+      "masala_dosa_sold": "float64",
+      "masala_dosa_prepared": "float64",
+      "masala_dosa_waste": "float64",
+      "chapati_sold": "float64",
+      "chapati_prepared": "float64",
+      "chapati_waste": "float64",
+      "veg_biryani_sold": "float64",
+      "veg_biryani_prepared": "float64",
+      "veg_biryani_waste": "float64",
+      "meals_sold": "float64",
+      "meals_prepared": "float64",
+      "meals_waste": "float64",
+      "samosa_sold": "float64",
+      "samosa_prepared": "float64",
+      "samosa_waste": "float64",
+      "tea_sold": "float64",
+      "tea_prepared": "float64",
+      "tea_waste": "float64",
+      "coffee_sold": "float64",
+      "coffee_prepared": "float64",
+      "coffee_waste": "float64",
+      "sandwich_sold": "float64",
+      "sandwich_prepared": "float64",
+      "sandwich_waste": "float64",
+      "noodles_sold": "float64",
+      "noodles_prepared": "float64",
+      "noodles_waste": "float64"
+    },
+    "preview": [
+      {
+        "date": "2026-01-01",
+        "day_of_week": "Thursday",
+        "weather": "Sunny",
+        "temperature": 33.0,
+        "event": "Festival",
+        "campus_activity": "Medium",
+        "expected_footfall": 296.0,
+        "actual_footfall": 309.0,
+        "supply_level": "Medium",
+        "inventory_status": "Overstock",
+        "time_slot": "Lunch",
+        "total_revenue": 16515.0,
+        "total_cost": 11619.0,
+        "profit": 4896.0,
+        "idli_sold": 58.0,
+        "idli_prepared": 66.0,
+        "idli_waste": 8.0,
+        "vada_sold": 37.0,
+        "vada_prepared": 44.0,
+        "vada_waste": 7.0,
+        "plain_dosa_sold": 50.0,
+        "plain_dosa_prepared": 62.0,
+        "plain_dosa_waste": 12.0,
+        "masala_dosa_sold": 35.0,
+        "masala_dosa_prepared": 44.0,
+        "masala_dosa_waste": 9.0,
+        "chapati_sold": 47.0,
+        "chapati_prepared": 53.0,
+        "chapati_waste": 6.0,
+        "veg_biryani_sold": 40.0,
+        "veg_biryani_prepared": 44.0,
+        "veg_biryani_waste": 4.0,
+        "meals_sold": 55.0,
+        "meals_prepared": 59.0,
+        "meals_waste": 4.0,
+        "samosa_sold": 30.0,
+        "samosa_prepared": 39.0,
+        "samosa_waste": 9.0,
+        "tea_sold": 52.0,
+        "tea_prepared": 60.0,
+        "tea_waste": 8.0,
+        "coffee_sold": 61.0,
+        "coffee_prepared": 74.0,
+        "coffee_waste": 13.0,
+        "sandwich_sold": 24.0,
+        "sandwich_prepared": 38.0,
+        "sandwich_waste": 14.0,
+        "noodles_sold": 32.0,
+        "noodles_prepared": 37.0,
+        "noodles_waste": 5.0
+      },
+      {
+        "date": "2026-01-02",
+        "day_of_week": "Friday",
+        "weather": "Rainy",
+        "temperature": 40.0,
+        "event": "Festival",
+        "campus_activity": "Low",
+        "expected_footfall": 265.0,
+        "actual_footfall": 241.0,
+        "supply_level": "Medium",
+        "inventory_status": "Normal",
+        "time_slot": "Evening",
+        "total_revenue": 12035.0,
+        "total_cost": 8835.0,
+        "profit": 3200.0,
+        "idli_sold": 47.0,
+        "idli_prepared": 52.0,
+        "idli_waste": 5.0,
+        "vada_sold": 31.0,
+        "vada_prepared": 39.0,
+        "vada_waste": 8.0,
+        "plain_dosa_sold": 35.0,
+        "plain_dosa_prepared": 47.0,
+        "plain_dosa_waste": 12.0,
+        "masala_dosa_sold": 30.0,
+        "masala_dosa_prepared": 33.0,
+        "masala_dosa_waste": 3.0,
+        "chapati_sold": 38.0,
+        "chapati_prepared": 48.0,
+        "chapati_waste": 10.0,
+        "veg_biryani_sold": 31.0,
+        "veg_biryani_prepared": 39.0,
+        "veg_biryani_waste": 8.0,
+        "meals_sold": 36.0,
+        "meals_prepared": 39.0,
+        "meals_waste": 3.0,
+        "samosa_sold": 17.0,
+        "samosa_prepared": 26.0,
+        "samosa_waste": 9.0,
+        "tea_sold": 47.0,
+        "tea_prepared": 59.0,
+        "tea_waste": 12.0,
+        "coffee_sold": 44.0,
+        "coffee_prepared": 55.0,
+        "coffee_waste": 11.0,
+        "sandwich_sold": 18.0,
+        "sandwich_prepared": 29.0,
+        "sandwich_waste": 11.0,
+        "noodles_sold": 19.0,
+        "noodles_prepared": 23.0,
+        "noodles_waste": 4.0
+      },
+      {
+        "date": "2026-01-03",
+        "day_of_week": "Saturday",
+        "weather": "Cloudy",
+        "temperature": 25.0,
+        "event": "Festival",
+        "campus_activity": "Low",
+        "expected_footfall": 315.0,
+        "actual_footfall": 299.0,
+        "supply_level": "Low",
+        "inventory_status": "Low",
+        "time_slot": "Breakfast",
+        "total_revenue": 13560.0,
+        "total_cost": 10398.0,
+        "profit": 3162.0,
+        "idli_sold": 56.0,
+        "idli_prepared": 64.0,
+        "idli_waste": 8.0,
+        "vada_sold": 39.0,
+        "vada_prepared": 45.0,
+        "vada_waste": 6.0,
+        "plain_dosa_sold": 47.0,
+        "plain_dosa_prepared": 61.0,
+        "plain_dosa_waste": 14.0,
+        "masala_dosa_sold": 26.0,
+        "masala_dosa_prepared": 34.0,
+        "masala_dosa_waste": 8.0,
+        "chapati_sold": 42.0,
+        "chapati_prepared": 56.0,
+        "chapati_waste": 14.0,
+        "veg_biryani_sold": 27.0,
+        "veg_biryani_prepared": 38.0,
+        "veg_biryani_waste": 11.0,
+        "meals_sold": 37.0,
+        "meals_prepared": 43.0,
+        "meals_waste": 6.0,
+        "samosa_sold": 30.0,
+        "samosa_prepared": 38.0,
+        "samosa_waste": 8.0,
+        "tea_sold": 60.0,
+        "tea_prepared": 69.0,
+        "tea_waste": 9.0,
+        "coffee_sold": 55.0,
+        "coffee_prepared": 68.0,
+        "coffee_waste": 13.0,
+        "sandwich_sold": 22.0,
+        "sandwich_prepared": 35.0,
+        "sandwich_waste": 13.0,
+        "noodles_sold": 27.0,
+        "noodles_prepared": 36.0,
+        "noodles_waste": 9.0
+      },
+      {
+        "date": "2026-01-04",
+        "day_of_week": "Sunday",
+        "weather": "Rainy",
+        "temperature": 25.0,
+        "event": "Exam",
+        "campus_activity": "Medium",
+        "expected_footfall": 121.0,
+        "actual_footfall": 107.0,
+        "supply_level": "High",
+        "inventory_status": "Overstock",
+        "time_slot": "Evening",
+        "total_revenue": 5395.0,
+        "total_cost": 5292.0,
+        "profit": 103.0,
+        "idli_sold": 21.0,
+        "idli_prepared": 33.0,
+        "idli_waste": 12.0,
+        "vada_sold": 15.0,
+        "vada_prepared": 27.0,
+        "vada_waste": 12.0,
+        "plain_dosa_sold": 18.0,
+        "plain_dosa_prepared": 27.0,
+        "plain_dosa_waste": 9.0,
+        "masala_dosa_sold": 11.0,
+        "masala_dosa_prepared": 16.0,
+        "masala_dosa_waste": 5.0,
+        "chapati_sold": 14.0,
+        "chapati_prepared": 26.0,
+        "chapati_waste": 12.0,
+        "veg_biryani_sold": 13.0,
+        "veg_biryani_prepared": 21.0,
+        "veg_biryani_waste": 8.0,
+        "meals_sold": 17.0,
+        "meals_prepared": 27.0,
+        "meals_waste": 10.0,
+        "samosa_sold": 9.0,
+        "samosa_prepared": 14.0,
+        "samosa_waste": 5.0,
+        "tea_sold": 19.0,
+        "tea_prepared": 25.0,
+        "tea_waste": 6.0,
+        "coffee_sold": 18.0,
+        "coffee_prepared": 30.0,
+        "coffee_waste": 12.0,
+        "sandwich_sold": 6.0,
+        "sandwich_prepared": 15.0,
+        "sandwich_waste": 9.0,
+        "noodles_sold": 12.0,
+        "noodles_prepared": 20.0,
+        "noodles_waste": 8.0
+      },
+      {
+        "date": "2026-01-05",
+        "day_of_week": "Monday",
+        "weather": "Cloudy",
+        "temperature": 32.0,
+        "event": "Festival",
+        "campus_activity": "Medium",
+        "expected_footfall": 311.0,
+        "actual_footfall": 257.0,
+        "supply_level": "Medium",
+        "inventory_status": "Low",
+        "time_slot": "Lunch",
+        "total_revenue": 13270.0,
+        "total_cost": 10326.0,
+        "profit": 2944.0,
+        "idli_sold": 42.0,
+        "idli_prepared": 49.0,
+        "idli_waste": 7.0,
+        "vada_sold": 37.0,
+        "vada_prepared": 48.0,
+        "vada_waste": 11.0,
+        "plain_dosa_sold": 41.0,
+        "plain_dosa_prepared": 55.0,
+        "plain_dosa_waste": 14.0,
+        "masala_dosa_sold": 26.0,
+        "masala_dosa_prepared": 36.0,
+        "masala_dosa_waste": 10.0,
+        "chapati_sold": 36.0,
+        "chapati_prepared": 43.0,
+        "chapati_waste": 7.0,
+        "veg_biryani_sold": 34.0,
+        "veg_biryani_prepared": 45.0,
+        "veg_biryani_waste": 11.0,
+        "meals_sold": 45.0,
+        "meals_prepared": 57.0,
+        "meals_waste": 12.0,
+        "samosa_sold": 15.0,
+        "samosa_prepared": 26.0,
+        "samosa_waste": 11.0,
+        "tea_sold": 57.0,
+        "tea_prepared": 68.0,
+        "tea_waste": 11.0,
+        "coffee_sold": 57.0,
+        "coffee_prepared": 70.0,
+        "coffee_waste": 13.0,
+        "sandwich_sold": 14.0,
+        "sandwich_prepared": 23.0,
+        "sandwich_waste": 9.0,
+        "noodles_sold": 26.0,
+        "noodles_prepared": 32.0,
+        "noodles_waste": 6.0
+      }
+    ],
+    "dateRange": {
+      "start": "2026-01-01",
+      "end": "2027-05-15"
+    },
+    "inferredTargetColumns": [
+      "expected_footfall",
+      "actual_footfall",
+      "veg_biryani_sold",
+      "vada_sold",
+      "tea_sold",
+      "sandwich_sold",
+      "samosa_sold",
+      "plain_dosa_sold",
+      "noodles_sold",
+      "meals_sold",
+      "masala_dosa_sold",
+      "idli_sold",
+      "coffee_sold",
+      "chapati_sold"
+    ],
+    "targetMeans": {
+      "expected_footfall": 215.133,
+      "actual_footfall": 214.476,
+      "veg_biryani_sold": 25.61,
+      "vada_sold": 25.863,
+      "tea_sold": 42.91,
+      "sandwich_sold": 15.019,
+      "samosa_sold": 17.227,
+      "plain_dosa_sold": 34.343,
+      "noodles_sold": 19.541,
+      "meals_sold": 32.183,
+      "masala_dosa_sold": 21.384,
+      "idli_sold": 38.542,
+      "coffee_sold": 38.712,
+      "chapati_sold": 30.078
+    }
+  }
+}

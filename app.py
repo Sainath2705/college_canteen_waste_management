@@ -8,6 +8,14 @@ import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
+from canteen_analytics import (
+    CANTEEN_MODEL_PATH,
+    CANTEEN_METADATA_PATH,
+    get_canteen_status,
+    load_canteen_artifact,
+    predict_canteen_forecast,
+    train_canteen_models,
+)
 from ml_service import (
     DEFAULT_MODEL_PATH,
     latest_model_status,
@@ -41,6 +49,22 @@ VALID_DAYS = {
     "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
 }
 VALID_SUPPLY = {"Low", "Medium", "High"}
+
+
+def _parse_json_field(value, default=None):
+    if value is None:
+        return default
+    if isinstance(value, (dict, list)):
+        return value
+    if isinstance(value, str):
+        value = value.strip()
+        if not value:
+            return default
+        try:
+            return json.loads(value)
+        except json.JSONDecodeError:
+            return value
+    return value
 
 
 def load_csv_dataset(file_stream):
@@ -421,17 +445,27 @@ def _get_request_payload():
 
 @app.route("/", methods=["GET"])
 def serve_dashboard():
+    return app.send_static_file("index.html")
+
+
+@app.route("/api/info", methods=["GET"])
+def api_info():
     status = latest_model_status()
     return jsonify(
         {
-            "message": "On-demand tabular model training API.",
+            "message": "CanteenIQ analytics platform.",
             "trainedModel": status.get("trained", False),
             "modelPath": status.get("modelPath"),
+            "dashboard": "/",
             "endpoints": {
                 "health": "/api/health",
                 "train": "/train",
                 "predict": "/predict",
                 "status": "/model/status",
+                "canteenStatus": "/canteen/status",
+                "canteenTrain": "/canteen/train",
+                "canteenPredict": "/canteen/predict",
+                "supply": "/api/supply",
             },
         }
     )
@@ -452,6 +486,81 @@ def health_check():
 @app.route("/model/status", methods=["GET"])
 def model_status():
     return jsonify(latest_model_status())
+
+
+@app.route("/api/supply", methods=["GET"])
+def supply_data():
+    return jsonify(load_supply_data())
+
+
+@app.route("/canteen/status", methods=["GET"])
+def canteen_status():
+    model_path = request.args.get("modelPath", str(CANTEEN_MODEL_PATH))
+    metadata_path = request.args.get("metadataPath", str(CANTEEN_METADATA_PATH))
+    return jsonify(get_canteen_status(model_path=model_path, metadata_path=metadata_path))
+
+
+@app.route("/canteen/train", methods=["POST"])
+def train_canteen_model():
+    try:
+        payload = _get_request_payload()
+        model_path = payload.get("modelPath") or str(CANTEEN_MODEL_PATH)
+        metadata_path = payload.get("metadataPath") or str(CANTEEN_METADATA_PATH)
+
+        if "dataset" in request.files:
+            dataset_file = request.files["dataset"]
+            frame = load_tabular_dataframe(dataset_file.stream, filename=dataset_file.filename)
+        elif payload.get("dataPath"):
+            frame = load_tabular_dataframe(payload.get("dataPath"))
+        else:
+            return jsonify({"error": "Upload a dataset file or provide dataPath."}), 400
+
+        artifact = train_canteen_models(frame, model_path=model_path, metadata_path=metadata_path)
+        return jsonify(
+            {
+                "status": "trained",
+                "modelPath": str(model_path),
+                "metadataPath": str(metadata_path),
+                "metrics": artifact.get("metrics", {}),
+                "datasetProfile": artifact.get("datasetProfile", {}),
+            }
+        )
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except FileNotFoundError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except Exception as exc:
+        return jsonify({"error": "Internal server error", "detail": str(exc)}), 500
+
+
+@app.route("/canteen/predict", methods=["POST"])
+def predict_canteen_model():
+    try:
+        payload = _get_request_payload()
+        model_path = payload.get("modelPath") or str(CANTEEN_MODEL_PATH)
+        supply_availability = payload.get("supplyAvailability") or "Medium"
+        scenario = _parse_json_field(payload.get("scenario"), default={}) or {}
+        menu_items = _parse_json_field(payload.get("menuItems"), default=None)
+
+        if not isinstance(scenario, dict):
+            scenario = {}
+        if menu_items is not None and not isinstance(menu_items, list):
+            menu_items = None
+
+        artifact = load_canteen_artifact(model_path=model_path)
+        result = predict_canteen_forecast(
+            artifact,
+            scenario=scenario,
+            supply_availability=supply_availability,
+            menu_items=menu_items,
+        )
+        return jsonify(result)
+    except FileNotFoundError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+    except Exception as exc:
+        return jsonify({"error": "Internal server error", "detail": str(exc)}), 500
 
 
 @app.route("/train", methods=["POST"])
