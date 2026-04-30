@@ -218,20 +218,40 @@ curl -X POST http://127.0.0.1:5000/train ^
 
 ## Deployment
 
-Use `app.py` as the main entry file. The root route serves the HTML dashboard.
+The project is ready for Render deployment.
 
-### Render or Heroku-style deploys
+### One-click Render deploy
 
-The repo includes a [`Procfile`](Procfile) that launches:
+This repo includes a [Render Blueprint](render.yaml) and a [`Procfile`](Procfile).
+Render will use:
 
 ```bash
 gunicorn app:app --bind 0.0.0.0:$PORT
 ```
 
+The Python runtime is pinned in [`runtime.txt`](runtime.txt).
+
+Deploy steps:
+
+1. Push the repo to GitHub.
+2. In Render, choose **New +** -> **Blueprint**.
+3. Connect the repository.
+4. Render will read `render.yaml` and create the web service.
+5. Add environment variables if you want them:
+   - `OPENWEATHER_API_KEY`
+   - `OPENAI_API_KEY`
+6. Open the deployed URL and upload your dataset from the dashboard.
+
 ### Environment variables
 
 - `OPENWEATHER_API_KEY` - optional, used for live weather lookup in the dashboard
 - `OPENAI_API_KEY` - optional, only relevant if you want the Flask chat fallback to use OpenAI
+
+### Notes for Render
+
+- The app trains on the dataset you upload, so you can redeploy first and train after the service starts.
+- If Render restarts the service, retrain once before forecasting again.
+- The root page serves the main HTML dashboard from `static/`.
 
 ## Suggested Hackathon Pitch
 
